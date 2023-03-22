@@ -12,24 +12,11 @@ public class Player : Airship
         }
         set
         {
-            // 들어온 값이 +일 경우
-            if(value > 0)
+            oil -= value;
+            if (oil <= 0)
             {
-                oil += value;
-                if (oil > setOil)
-                {
-                    oil = setOil;
-                }
+                oilDie();
             }
-            else
-            {
-                oil -= value;
-                if (oil <= 0)
-                {
-                    oilDie();
-                }
-            }
-
         }
     }
     [Header("oil")]
@@ -44,6 +31,7 @@ public class Player : Airship
     protected override void Awake()
     {
         base.Awake();
+        GameManager.GM.GameDataReset();
 
         oil = setOil;
     }
@@ -56,6 +44,8 @@ public class Player : Airship
     protected override void Update()
     {
         //base.Update();
+        _Oil = Time.deltaTime;
+
         InputControl();
     }
 

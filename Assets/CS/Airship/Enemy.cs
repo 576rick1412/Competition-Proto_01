@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [Header("АјАн")]
+    public string attackType;
+
+
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

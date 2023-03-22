@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("게임 설정")]
     public bool isGameStop; // 게임의 모든 오브젝트 정지 
+    public uint score;      // 게임 점수
 
     string filePath;
     public MainDB data;
@@ -42,6 +43,22 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void GameDataReset()
+    {
+        isGameStop = false;
+        score = 0;
+    }
+
+    public string CommaText(uint value)
+    {
+        if(value == 0)
+        {
+            return "0";
+        }
+
+        return string.Format("{0:#,###}",value);
     }
 
     public void JsonSave()
