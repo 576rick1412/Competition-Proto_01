@@ -7,7 +7,8 @@ public class Bomb : MonoBehaviour
     public float desTime;   // 삭제 시간 지정
     void Start()
     {
-        Destroy(gameObject, desTime);
+        float ran = Random.Range(0f, 0.5f);
+        Destroy(gameObject, desTime + ran);
         StartCoroutine(BombCo());
     }
 

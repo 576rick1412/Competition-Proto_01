@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProtoBoss : MonoBehaviour
+public class GameOverUI : MonoBehaviour
 {
-    public GameObject ins;
     void Start()
     {
         
@@ -12,6 +11,6 @@ public class ProtoBoss : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 }

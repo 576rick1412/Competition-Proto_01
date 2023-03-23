@@ -21,6 +21,10 @@ public class Pattern : MonoBehaviour
     public int rotDir;              // 총알 회전 방향
     public int angle;               // 각도
     */
+    public float desTime;           // 자폭 시간
+
+    List<Bullet> bulletList = new List<Bullet>();
+
     void Start()
     {
         /*
@@ -73,49 +77,49 @@ public class Pattern : MonoBehaviour
         */
     }
 
-    public void Start_Shot360(int count, int bulletType, float speed, int damage)
+    public void Start_Shot360(                     int count, int bulletType,              float speed, int damage)
     {
         StartCoroutine(Shot360(count, bulletType, speed, damage));
     }
-    public void Start_MultiShot360(int times, int count, int bulletType, float delay, float speed, int damage)
+    public void Start_MultiShot360(     int times, int count, int bulletType, float delay, float speed, int damage)
     {
         StartCoroutine(MultiShot360(times, count, bulletType, delay, speed, damage));
     }
-    public void Start_LengthDiamond(int times, int count, int bulletType, float delay, float speed, int damage)
+    public void Start_LengthDiamond(    int times, int count, int bulletType, float delay, float speed, int damage)
     {
         StartCoroutine(LengthDiamond(times, count, bulletType, delay, speed, damage));
     }
-    public void Start_WidthDiamond(int times, int count, int bulletType, float delay, float speed, int damage)
+    public void Start_WidthDiamond(     int times, int count, int bulletType, float delay, float speed, int damage)
     {
         StartCoroutine(WidthDiamond(times, count, bulletType, delay, speed, damage));
     }
-    public void Start_MultiDiamond(int times, int count, int bulletType, float delay, float speed, int damage)
+    public void Start_MultiDiamond(     int times, int count, int bulletType, float delay, float speed, int damage)
     {
         StartCoroutine(MultiDiamond(times, count, bulletType, delay, speed, damage));
     }
-    public void Start_DrawLine(int times, int count, int bulletType, float delay, int rotDir, float speed, int damage)
+    public void Start_DrawLine(         int times, int count, int bulletType, float delay, float speed, int damage, int rotDir)
     {
-        StartCoroutine(DrawLine(times, count, bulletType, delay, rotDir, speed, damage));
+        StartCoroutine(DrawLine(times, count, bulletType, delay, speed, damage, rotDir));
     }
-    public void Start_RotLine(int times, int count, int bulletType, float delay, int rotDir, float speed, int damage)
+    public void Start_RotLine(          int times, int count, int bulletType, float delay, float speed, int damage, int rotDir)
     {
-        StartCoroutine(RotLine(times, count, bulletType, delay, rotDir, speed, damage));
+        StartCoroutine(RotLine(times, count, bulletType, delay, speed, damage, rotDir));
     }
-    public void Start_TargetLine(int times, int bulletType, float delay, float speed, int damage)
+    public void Start_TargetLine(       int times,            int bulletType, float delay, float speed, int damage)
     {
         StartCoroutine(TargetLine(times, bulletType, delay, speed, damage));
     }
-    public void Start_TargetRound(int times, int count, int bulletType, float delay, float rad, float speed, int damage)
+    public void Start_TargetRound(      int times, int count, int bulletType, float delay, float speed, int damage, float rad)
     {
-        StartCoroutine(TargetRound(times, count, bulletType, delay, rad, speed, damage));
+        StartCoroutine(TargetRound(times, count, bulletType, delay, speed, damage, rad));
     }
-    public void Start_StopTargetRound(int count, int bulletType, float delay, float rad, float speed, int damage)
+    public void Start_StopTargetRound(             int count, int bulletType, float delay, float speed, int damage, float rad)
     {
-        StartCoroutine(StopTargetRound(count, bulletType, delay, rad, speed, damage));
+        StartCoroutine(StopTargetRound(count, bulletType, delay, speed, damage, rad));
     }
-    public void Start_FormShot(int times, int count, int bulletType, float angle, float speed, int damage)
+    public void Start_FormShot(         int times, int count, int bulletType,              float speed, int damage, float angle)
     {
-        StartCoroutine(FormShot(times, count, bulletType, angle, speed, damage));
+        StartCoroutine(FormShot(times, count, bulletType, speed, damage, angle));
     }
 
     void Update()
@@ -136,6 +140,15 @@ public class Pattern : MonoBehaviour
                 ), ForceMode2D.Impulse);
 
             bullet.transform.Rotate(0f, 0f, 360 * i / count - 90);
+
+            bulletList.Add(bullet.GetComponent<Bullet>());
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach(var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
@@ -158,10 +171,19 @@ public class Pattern : MonoBehaviour
                     ), ForceMode2D.Impulse);
 
                 bullet.transform.Rotate(0f, 0f, 360 * j / count - 90);
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
             speedPlus += 0.5f;
             yield return new WaitForSeconds(delay);
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
@@ -184,10 +206,19 @@ public class Pattern : MonoBehaviour
                     ), ForceMode2D.Impulse);
 
                 bullet.transform.Rotate(0f, 0f, 360 * j / count);
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
             speedPlus += 0.5f;
             yield return new WaitForSeconds(delay);
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
@@ -210,10 +241,19 @@ public class Pattern : MonoBehaviour
                     ), ForceMode2D.Impulse);
 
                 bullet.transform.Rotate(0f, 0f, 360 * j / count);
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
             speedPlus += 0.5f;
             yield return new WaitForSeconds(delay);
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
@@ -237,6 +277,8 @@ public class Pattern : MonoBehaviour
 
                 bullet.transform.Rotate(0f, 0f, 360 * j / count - 90);
 
+                bulletList.Add(bullet.GetComponent<Bullet>());
+
                 //=========================================================================================
 
                 bullet = Instantiate(bullets[bulletType], transform.position, Quaternion.identity);
@@ -248,17 +290,26 @@ public class Pattern : MonoBehaviour
                     ), ForceMode2D.Impulse);
 
                 bullet.transform.Rotate(0f, 0f, 360 * j / count);
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
             speedPlus += 0.5f;
             yield return new WaitForSeconds(delay);
         }
 
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
+        }
+
         Destroy(gameObject);
         yield return null;
     }
 
-    IEnumerator DrawLine(int times, int count, int bulletType, float delay,int rotDir, float speed, int damage)
+    IEnumerator DrawLine(int times, int count, int bulletType, float delay, float speed, int damage, int rotDir)
     {
         for (int i = 0; i < times; i++)
         {
@@ -268,16 +319,25 @@ public class Pattern : MonoBehaviour
                 {
                     var bullet = Instantiate(bullets[bulletType], transform.position, Quaternion.Euler(0f, 0f, (j + rot) * rotDir));
                     bullet.GetComponent<Bullet>().BulletSetting(spd: speed, dmg: damage);
+
+                    bulletList.Add(bullet.GetComponent<Bullet>());
                 }
                 yield return new WaitForSeconds(delay);
             }
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
         yield return null;
     }
 
-    IEnumerator RotLine(int times, int count, int bulletType, float delay, int rotDir, float speed, int damage)
+    IEnumerator RotLine(int times, int count, int bulletType, float delay, float speed, int damage, int rotDir)
     {
         float plus = 0f;
         for (int i = 0; i < times * 2; i++)
@@ -288,12 +348,21 @@ public class Pattern : MonoBehaviour
                 {
                     var bullet = Instantiate(bullets[bulletType], transform.position, Quaternion.Euler(0f, 0f, (j + rot) * rotDir));
                     bullet.GetComponent<Bullet>().BulletSetting(spd: speed + plus, dmg: damage);
+
+                    bulletList.Add(bullet.GetComponent<Bullet>());
                 }
                 yield return new WaitForSeconds(delay);
             }
 
             rotDir *= -1;
             plus += delay * 3;
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
@@ -312,14 +381,23 @@ public class Pattern : MonoBehaviour
             var bullet = Instantiate(bullets[bulletType], transform.position, Quaternion.Euler(0, 0, z - 90));
             bullet.GetComponent<Bullet>().BulletSetting(spd: speed, dmg: damage);
 
+            bulletList.Add(bullet.GetComponent<Bullet>());
+
             yield return new WaitForSeconds(delay);
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
         yield return null;
     }
 
-    IEnumerator TargetRound(int times, int count, int bulletType, float delay, float rad, float speed, int damage)
+    IEnumerator TargetRound(int times, int count, int bulletType, float delay, float speed, int damage, float rad)
     {
         Transform player = GameObject.Find("Player").transform;
 
@@ -335,20 +413,27 @@ public class Pattern : MonoBehaviour
 
                 var bullet =  Instantiate(bullets[bulletType], pos, Quaternion.Euler(0, 0, z - 90));
                 bullet.GetComponent<Bullet>().BulletSetting(spd: speed, dmg: damage);
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
             rad += 2f;
 
             yield return new WaitForSeconds(delay);
         }
 
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
+        }
+
         Destroy(gameObject);
         yield return null;
     }
 
-    IEnumerator StopTargetRound(int count, int bulletType, float delay, float rad, float speed, int damage)
+    IEnumerator StopTargetRound(int count, int bulletType, float delay, float speed, int damage, float rad)
     {
-        List<Bullet> tempBullets = new List<Bullet>();
-
         Transform player = GameObject.Find("Player").transform;
 
         for (int j = 0; j < 360; j += 360 / count)
@@ -361,20 +446,27 @@ public class Pattern : MonoBehaviour
 
             var bullet = Instantiate(bullets[bulletType], pos, Quaternion.Euler(0, 0, z - 90));
             bullet.GetComponent<Bullet>().BulletSetting(isForce: true, spd: speed, dmg: damage);
-            tempBullets.Add(bullet.GetComponent<Bullet>());
+            bulletList.Add(bullet.GetComponent<Bullet>());
         }
 
-        foreach (var i in tempBullets)
+        foreach (var i in bulletList)
         {
             i.isForceMove = false;
             yield return new WaitForSeconds(delay);
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);
         yield return null;
     }
 
-    IEnumerator FormShot(int times, int count, int bulletType, float angle, float speed, int damage)
+    IEnumerator FormShot(int times, int count, int bulletType,  float speed, int damage, float angle)
     {
         float plus = 0f;
 
@@ -392,10 +484,19 @@ public class Pattern : MonoBehaviour
                 var bullet = Instantiate(bullets[bulletType], transform.position, Quaternion.Euler(0, 0, z - 90));
                 bullet.GetComponent<Bullet>().BulletSetting(spd: speed + plus, dmg: damage);
                 z += amount;
+
+                bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
-            plus += 0.5f;
+            plus += 0.2f;
             count++;
+        }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
         }
 
         Destroy(gameObject);

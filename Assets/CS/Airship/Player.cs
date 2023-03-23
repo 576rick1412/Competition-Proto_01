@@ -142,7 +142,7 @@ public class Player : Airship
     public void FireInstan(int setBullet = 0, float x = 0, float rot = 0)
     {
         var bullet = Instantiate(bullets[setBullet], transform.position + new Vector3(x, 0f, 0f), transform.rotation);
-        bullet.GetComponent<Bullet>().BulletSetting(isForce: true, spd: bulletSpeed, dmg: damage);
+        bullet.GetComponent<Bullet>().BulletSetting(false, true, bulletSpeed, damage);
         bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(rot, 1) * bulletSpeed, ForceMode2D.Impulse);
     }
 

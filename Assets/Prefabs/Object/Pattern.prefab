@@ -46,8 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullets:
   - {fileID: 2445230639155723569, guid: 4a751f09942d8224893a8096b827a180, type: 3}
-  bulletSpeed: 0
-  patternType: 
-  makeBulletCount: 0
-  makeTimes: 0
-  setBullet: 0
+  desTime: 3.5

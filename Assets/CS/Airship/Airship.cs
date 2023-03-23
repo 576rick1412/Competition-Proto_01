@@ -66,5 +66,6 @@ public class Airship : MonoBehaviour
     public virtual void hpDie()
     {
         Instantiate(bomb, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 }
