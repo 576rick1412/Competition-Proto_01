@@ -124,7 +124,11 @@ public class Pattern : MonoBehaviour
 
     void Update()
     {
-        
+        if (GameManager.GM.isGameStop)
+        {
+            StopAllCoroutines();
+            return;
+        }
     }
 
     IEnumerator Shot360(int count, int bulletType,float speed,int damage)

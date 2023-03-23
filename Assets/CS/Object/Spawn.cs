@@ -24,7 +24,11 @@ public class Spawn : MonoBehaviour
 
     void Update()
     {
-        
+        if (GameManager.GM.isGameStop)
+        {
+            StopAllCoroutines();
+            return;
+        }
     }
 
     IEnumerator SpawnEnemyWave(int times, float plusPos, float delay, int enemyType,

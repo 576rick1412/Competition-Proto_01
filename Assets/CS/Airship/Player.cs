@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Airship
 {
@@ -36,6 +37,13 @@ public class Player : Airship
     public float rightEnd;
     public float topEnd;
     public float bottomEnd;
+
+    [Header("게임오버 UI")]
+    public GameObject gameOverUI;
+
+    [Header("블러드씬")]
+    public Image bloodScene;
+    IEnumerator bloodCo;
     protected override void Awake()
     {
         base.Awake();
@@ -49,18 +57,28 @@ public class Player : Airship
     protected override void Start()
     {
         //base.Start();
+        bloodCo = BloodSceneCo();
     }
 
     protected override void Update()
     {
         //base.Update();
-        _Oil = Time.deltaTime;
-
+        if(!GameManager.GM.isGameStop)
+        {
+            _Oil = Time.deltaTime;
+            GameManager.GM.runTime += Time.deltaTime;
+        }
+        
         InputControl();
     }
 
     public void InputControl()
     {
+        if (GameManager.GM.isGameStop)
+        {
+            return;
+        }
+
         InputMove();
 
         if(Input.GetKey(KeyCode.Space))
@@ -71,7 +89,7 @@ public class Player : Airship
             }
         }
     }
-
+    
     void BorderCheck(ref Vector3 move)
     {
         if (transform.position.x + (move.x * speed * Time.deltaTime) <= leftEnd ||
@@ -145,13 +163,56 @@ public class Player : Airship
         bullet.GetComponent<Bullet>().BulletSetting(false, true, bulletSpeed, damage);
         bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(rot, 1) * bulletSpeed, ForceMode2D.Impulse);
     }
-
-    public override void hpDie()
+    protected override void Hit()
     {
-        
+        base.Hit();
+
+        StopCoroutine(bloodCo);
+
+        bloodCo = BloodSceneCo();
+        StartCoroutine(bloodCo);
+    }
+    protected override void hpDie()
+    {
+        if (GameManager.GM.isGameStop)
+        {
+            return;
+        }   // 한번만 실행하도록 예외처리
+
+        GameManager.GM.isGameStop = true;
+
+        var temp = Instantiate(gameOverUI, transform.position, Quaternion.identity);
+        temp.GetComponent<GameOverUI>().isNoHP = true;
     }
     public void oilDie()
     {
+        if(GameManager.GM.isGameStop)
+        {
+            return;
+        }   // 한번만 실행하도록 예외처리
 
+        GameManager.GM.isGameStop = true;
+
+        var temp = Instantiate(gameOverUI, transform.position, Quaternion.identity);
+        temp.GetComponent<GameOverUI>().isNoHP = false;
+    }
+
+    IEnumerator BloodSceneCo()
+    {
+        byte a = 100;
+        bloodScene.color = new Color32(255, 0, 0, a);
+
+        int times = 40;
+        for (int i = 0; i < times; i++)
+        {
+            
+            bloodScene.color = new Color32(255, 0, 0, a);
+            a -= (byte)(100 / times);
+
+            yield return null;
+        }
+
+        bloodScene.color = new Color32(255, 0, 0, 0);
+        yield return null;
     }
 }

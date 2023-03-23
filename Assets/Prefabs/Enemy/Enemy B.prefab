@@ -125,13 +125,14 @@ MonoBehaviour:
   HP: 0
   speed: 5
   bomb: {fileID: 7985040453357906591, guid: 87ce08bab6b11b043b0f99c669dd9e6d, type: 3}
+  destroyPoint: 100
   patternObject: {fileID: 4627004199427923225, guid: 48e9616455373a449852b4c551631f5c, type: 3}
   startDelay: 1
   delay: 4
   endPos: {x: 0, y: 0, z: 0}
   formShot:
-    times: 1
-    count: 4
+    times: 2
+    count: 5
     bulletType: 0
     speed: 2
     damage: 20

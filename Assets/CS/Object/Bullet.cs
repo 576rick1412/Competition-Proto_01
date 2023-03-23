@@ -72,6 +72,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag(target))
         {
             collision.gameObject.GetComponent<Airship>()._HP = damage;
+            Destroy(gameObject);
         }
 
         if (collision.gameObject.CompareTag("Border"))

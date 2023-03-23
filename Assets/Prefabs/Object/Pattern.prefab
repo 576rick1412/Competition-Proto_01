@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullets:
   - {fileID: 2445230639155723569, guid: 4a751f09942d8224893a8096b827a180, type: 3}
-  desTime: 3.5
+  desTime: 3.8

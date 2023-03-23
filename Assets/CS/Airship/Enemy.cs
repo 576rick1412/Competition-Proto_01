@@ -5,6 +5,9 @@ using System;
 
 public class Enemy : Airship
 {
+    [Header("제거 시 주는 포인트")]
+    public uint destroyPoint;
+
     [Header("패턴 기본 설정")]
     public GameObject patternObject;    // 패턴 발사할 오브젝트
     public float startDelay;            // 공격 시작 전 딜레이
@@ -30,6 +33,12 @@ public class Enemy : Airship
 
     protected override void Update()
     {
+        if (GameManager.GM.isGameStop)
+        {
+            StopAllCoroutines();
+            return;
+        }
+        
         CanvasUI();
 
         Vector3 velo = Vector3.zero;
@@ -46,6 +55,14 @@ public class Enemy : Airship
         }
 
         tempHP = _HP;
+    }
+
+    protected override void hpDie()
+    {
+        base.hpDie();
+
+        GameManager.GM.destroyCount++;
+        GameManager.GM.score += destroyPoint;
     }
 
     [Serializable]

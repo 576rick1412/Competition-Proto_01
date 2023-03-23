@@ -59,11 +59,12 @@ public class Airship : MonoBehaviour
         transform.position += vec.normalized * speed * Time.deltaTime;
     }
 
-    public void Hit()
+    protected virtual void Hit()
     {
         anim.SetTrigger("Hit");
     }
-    public virtual void hpDie()
+
+    protected virtual void hpDie()
     {
         Instantiate(bomb, transform.position, Quaternion.identity);
         Destroy(this.gameObject);
