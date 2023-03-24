@@ -64,6 +64,10 @@ public class GameManager : MonoBehaviour
         
         return string.Format("{0:#,###}",value);
     }
+    public string TenZeroCommaText(uint value)
+    {
+        return string.Format("{0:0000000000}", value);
+    }
 
     public void RankArrange(string name)
     {
@@ -105,8 +109,9 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < data.ranks.Length; i++)
         {
-            data.ranks[i].setName = "Null";
-            data.ranks[i].setScore = 0000000000;
+            //data.ranks[i].setName = "Null";
+            data.ranks[i].setName = "---";
+            data.ranks[i].setScore = 0;
         }
 
         JsonSave();

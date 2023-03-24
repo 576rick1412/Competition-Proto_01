@@ -42,9 +42,9 @@ public class GameOverUI : MonoBehaviour
             subTitleTMP.text = "===< No Oil >===";
         }
 
-        scoreTMP.text = CommaText(GameManager.GM.score);
-        timeTMP.text = CommaText((uint)GameManager.GM.runTime);
-        destroyTMP.text = CommaText(GameManager.GM.destroyCount);
+        scoreTMP.text = GameManager.GM.TenZeroCommaText(GameManager.GM.score);
+        timeTMP.text = GameManager.GM.TenZeroCommaText((uint)GameManager.GM.runTime);
+        destroyTMP.text = GameManager.GM.TenZeroCommaText(GameManager.GM.destroyCount);
     }
 
     public void InputName()
@@ -56,7 +56,7 @@ public class GameOverUI : MonoBehaviour
 
     public void GoMain()
     {
-        MoveScene("MainScene");
+        MoveScene("TitleScene");
     }
     public void Retry()
     {
@@ -67,10 +67,5 @@ public class GameOverUI : MonoBehaviour
     {
         GameManager.GM.RankArrange(inputString);
         SceneManager.LoadScene(moveSceneName);
-    }
-
-    string CommaText(uint value)
-    {
-        return string.Format("{0:0000000000}", value);
     }
 }
