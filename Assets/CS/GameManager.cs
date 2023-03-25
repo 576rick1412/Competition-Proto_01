@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
                 temp = p;
             }
         }
+        JsonSave();
     }
 
     public void JsonSave()

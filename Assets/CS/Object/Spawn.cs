@@ -15,11 +15,14 @@ public class Spawn : MonoBehaviour
     public GameObject[] enemys;         // 생성 적
     public GameObject[] patterns;       // 생성 패턴
 
+    // 스폰 관련 설정
+    public uint spawnCount;                    // 원래의 처치 수 + 생성된 적의 수, 모든 적 처치 시 다음 스폰이 가능하도록 하기 위함
+    public bool isSpawnStart;                  // 스폰 시작
+
     void Start()
     {
-        StartCoroutine(SpawnEnemyWave(times: 3, plusPos: 1f, delay: 0.3f, enemyType: 0, 
-                                         enemyLine: 1,    pointLine: 0, 
-                                      endEnemyLine: 1, endPointLine: 1));
+        spawnCount = 0;
+        isSpawnStart = true;
     }
 
     void Update()
@@ -29,11 +32,28 @@ public class Spawn : MonoBehaviour
             StopAllCoroutines();
             return;
         }
+
+        // 모든 적 처치 시 다시 적 스폰 시작
+        if (GameManager.GM.destroyCount >=  spawnCount)
+        {
+            isSpawnStart = true;
+            Debug.Log("ASdadfgg");
+        }
+
+        if (isSpawnStart)
+        {
+            StartCoroutine(SpawnEnemyWave(times: 3, plusPos: 1f, delay: 0.3f, enemyType: 0,
+                                             enemyLine: 1, pointLine: 0,
+                                          endEnemyLine: 1, endPointLine: 1));
+        }
     }
 
     IEnumerator SpawnEnemyWave(int times, float plusPos, float delay, int enemyType,
                                int enemyLine, int pointLine, int endEnemyLine, int endPointLine)
     {
+        spawnCount = GameManager.GM.destroyCount + (uint)times;
+        isSpawnStart = false;
+
         float tempPos = 0f;
         for (int i = 0; i < times; i++)
         {
@@ -47,23 +67,6 @@ public class Spawn : MonoBehaviour
             tempPos += plusPos;
             yield return new WaitForSeconds(delay);
         }
-
-        yield return new WaitForSeconds(3f);
-
-        tempPos = 0f;
-        for (int i = 0; i < times; i++)
-        {
-            var enemy = Instantiate(enemys[0],
-                points[1].spawnPoints[3].position,
-                Quaternion.identity);
-
-            enemy.GetComponent<Enemy>().endPos =
-                points[1].spawnPoints[2].position + new Vector3(tempPos, 0, 0);
-
-            tempPos += -plusPos;
-            yield return new WaitForSeconds(delay);
-        }
-
         yield return null;
     }
 
@@ -71,8 +74,5 @@ public class Spawn : MonoBehaviour
     {
         var temp = Instantiate(patterns[patternType], points[enemyLine].spawnPoints[pointLine].position, Quaternion.identity);
         var pattern = temp.GetComponent<Pattern>();
-      
-
-
     }
 }

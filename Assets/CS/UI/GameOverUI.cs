@@ -66,6 +66,7 @@ public class GameOverUI : MonoBehaviour
     void MoveScene(string moveSceneName)
     {
         GameManager.GM.RankArrange(inputString);
+        GameManager.GM.GameDataReset();
         SceneManager.LoadScene(moveSceneName);
     }
 }
