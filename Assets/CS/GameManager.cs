@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public bool isGameStop;     // 게임의 모든 오브젝트 정지 
     public uint score;          // 게임 점수
     public float runTime;       // 게임 진행 시간
+    public uint stageCount;     // 현재 스테이지 번호
     public uint destroyCount;   // 적 파괴 개수
 
     string filePath;
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
         isGameStop = false;
         score = 0;
         runTime = 0f;
+        stageCount = 0;
         destroyCount = 0;
     }
 

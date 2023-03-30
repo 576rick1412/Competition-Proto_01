@@ -7,6 +7,8 @@ TagManager:
   - Item
   - Border
   - Enemy
+  - Meteo
+  - bomb
   layers:
   - Default
   - TransparentFX

@@ -10,19 +10,20 @@ public class Spawn : MonoBehaviour
         public Transform[] spawnPoints; // 스폰 포인트
     }
 
-    public Points[] points;             // 생성 포인트, 0 0 은 스포너 좌표
-    
-    public GameObject[] enemys;         // 생성 적
-    public GameObject[] patterns;       // 생성 패턴
+    public Points[] points;         // 생성 포인트, 0 0 은 스포너 좌표
 
     // 스폰 관련 설정
-    public uint spawnCount;                    // 원래의 처치 수 + 생성된 적의 수, 모든 적 처치 시 다음 스폰이 가능하도록 하기 위함
-    public bool isSpawnStart;                  // 스폰 시작
+    uint spawnCount;                // 원래의 처치 수 + 생성된 적의 수, 모든 적 처치 시 다음 스폰이 가능하도록 하기 위함
+    bool spawnStart;                // 스폰 시작
+    public int spawnIndex;          // 스폰 인덱스
 
-    void Start()
+    public WaveSetting[] WS;        // 적 생성 순서 지정
+
+    void Awake()
     {
         spawnCount = 0;
-        isSpawnStart = true;
+        spawnStart = true;
+        spawnIndex = 0;
     }
 
     void Update()
@@ -33,46 +34,135 @@ public class Spawn : MonoBehaviour
             return;
         }
 
-        // 모든 적 처치 시 다시 적 스폰 시작
-        if (GameManager.GM.destroyCount >=  spawnCount)
+        if (spawnIndex >= WS.Length)
         {
-            isSpawnStart = true;
-            Debug.Log("ASdadfgg");
+            StopAllCoroutines();
+            return;
         }
 
-        if (isSpawnStart)
+        if (spawnStart)
         {
-            StartCoroutine(SpawnEnemyWave(times: 3, plusPos: 1f, delay: 0.3f, enemyType: 0,
-                                             enemyLine: 1, pointLine: 0,
-                                          endEnemyLine: 1, endPointLine: 1));
+            if (WS[spawnIndex].isWindowPopup)
+            {
+                StartCoroutine(WindowPopup());
+                return;
+            }
+
+            if (WS[spawnIndex].isEnemyWave)
+            {
+                StartCoroutine(SpawnEnemyWave());
+            }
+            else
+            {
+                StartCoroutine(SpawnMeteo());
+            }
+        }
+        // 모든 적 처치 시 다시 적 스폰 시작
+        else if (GameManager.GM.destroyCount >= spawnCount)
+        {
+            spawnStart = true;
+            Debug.Log("스폰 재시작!");
         }
     }
 
-    IEnumerator SpawnEnemyWave(int times, float plusPos, float delay, int enemyType,
-                               int enemyLine, int pointLine, int endEnemyLine, int endPointLine)
+    IEnumerator WindowPopup()
     {
-        spawnCount = GameManager.GM.destroyCount + (uint)times;
-        isSpawnStart = false;
+        spawnStart = false;
+        uint tempCount = spawnCount;
+        spawnCount = 100000;
+        GameManager.GM.stageCount++;
 
-        float tempPos = 0f;
-        for (int i = 0; i < times; i++)
-        {
-            var enemy = Instantiate(enemys[enemyType],
-                points[enemyLine].spawnPoints[pointLine].position,
-                Quaternion.identity);
+        Instantiate(WS[spawnIndex].objectType, new Vector3(0, 0, 0), Quaternion.identity);
+        Debug.Log("sfagdsfhsh");
+        yield return new WaitForSeconds(5f);
 
-            enemy.GetComponent<Enemy>().endPos =
-                points[endEnemyLine].spawnPoints[endPointLine].position + new Vector3(tempPos, 0, 0);
+        spawnIndex++;
+        spawnStart = true;
+        spawnCount = tempCount;
 
-            tempPos += plusPos;
-            yield return new WaitForSeconds(delay);
-        }
         yield return null;
     }
 
-    public void SpawnPattern(int patternType, int enemyLine, int pointLine)
+    IEnumerator SpawnEnemyWave()
     {
-        var temp = Instantiate(patterns[patternType], points[enemyLine].spawnPoints[pointLine].position, Quaternion.identity);
+        spawnCount = GameManager.GM.destroyCount + (uint)WS[spawnIndex].times;
+        spawnStart = false;
+
+        float tempPos = 0f;
+        for (int i = 0; i < WS[spawnIndex].times; i++)
+        {
+            var enemy = Instantiate(WS[spawnIndex].objectType,
+                points[WS[spawnIndex].enemyLine].spawnPoints[WS[spawnIndex].pointLine].position,
+                Quaternion.identity);
+            
+            enemy.GetComponent<Enemy>().endPos =
+                points[WS[spawnIndex].endEnemyLine].spawnPoints[WS[spawnIndex].endPointLine].position + new Vector3(tempPos, 0, 0);
+
+            tempPos += WS[spawnIndex].plusPos;
+            yield return new WaitForSeconds(WS[spawnIndex].delay);
+        }
+
+        spawnIndex++;
+        yield return null;
+    }
+
+    IEnumerator SpawnMeteo()
+    {
+        spawnStart = false;
+        uint tempCount = spawnCount;
+        spawnCount = 100000;
+
+        float ranPosX = 3.5f;
+        for (int i = 0; i < WS[spawnIndex].times; i++)
+        {
+            Instantiate(WS[spawnIndex].objectType,
+                        points[0].spawnPoints[1].position + new Vector3(Random.Range(-ranPosX, ranPosX), 0, 0),
+                        Quaternion.identity);
+
+            yield return new WaitForSeconds(WS[spawnIndex].delay);
+        }
+        yield return new WaitForSeconds(WS[spawnIndex].delay * 5);
+
+        spawnIndex++;
+        spawnStart = true;
+        spawnCount = tempCount;
+
+        yield return null;
+    }
+
+    /*
+    public void SpawnPattern()
+    {
+        spawnStart = false;
+
+        var temp = Instantiate(WS[spawnIndex].objectType, points[WS[spawnIndex].enemyLine].spawnPoints[WS[spawnIndex].pointLine].position, Quaternion.identity);
         var pattern = temp.GetComponent<Pattern>();
+
+        spawnIndex++;
+    }
+    */
+
+    [System.Serializable]
+    public struct WaveSetting
+    {
+        [Header("스폰 타입")]
+        public bool isWindowPopup;      // 윈도우 생성
+        public bool isEnemyWave;        // 생성 타입
+
+        [Header("생성할 오브젝트")]
+        public GameObject objectType;   // 생성할 오브젝트
+
+        [Header("시작 지점")]
+        public int enemyLine;           // 생성 라인
+        public int pointLine;           // 생성 지점
+
+        [Header("최종 시점")]
+        public int endEnemyLine;        // 이동될 라인
+        public int endPointLine;        // 이동될 지점
+
+        [Header("오브젝트 설정")]
+        public int times;               // 생성반복 횟수
+        public float plusPos;           // 생성할때마다 옆으로 얼마만큼 이동할지
+        public float delay;             // 생성 간격
     }
 }

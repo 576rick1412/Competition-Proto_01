@@ -23,7 +23,8 @@ public class Pattern : MonoBehaviour
     */
     public float desTime;           // ÀÚÆø ½Ã°£
 
-    List<Bullet> bulletList = new List<Bullet>();
+    [HideInInspector]
+    public List<Bullet> bulletList = new List<Bullet>();
 
     void Start()
     {
@@ -179,7 +180,7 @@ public class Pattern : MonoBehaviour
                 bulletList.Add(bullet.GetComponent<Bullet>());
             }
 
-            speedPlus += 0.5f;
+            speedPlus += speed;
             yield return new WaitForSeconds(delay);
         }
 
@@ -209,7 +210,7 @@ public class Pattern : MonoBehaviour
                     (speed + speedPlus) * Mathf.Tan(Mathf.PI * 2 * j / count)
                     ), ForceMode2D.Impulse);
 
-                bullet.transform.Rotate(0f, 0f, 360 * j / count);
+                bullet.transform.Rotate(0f, 0f, 360 * j / count - 90f);
 
                 bulletList.Add(bullet.GetComponent<Bullet>());
             }
@@ -244,7 +245,7 @@ public class Pattern : MonoBehaviour
                     (speed + speedPlus) * Mathf.Cos(Mathf.PI * 2 * j / count)
                     ), ForceMode2D.Impulse);
 
-                bullet.transform.Rotate(0f, 0f, 360 * j / count);
+                bullet.transform.Rotate(0f, 0f, 360 * j / count - 90);
 
                 bulletList.Add(bullet.GetComponent<Bullet>());
             }

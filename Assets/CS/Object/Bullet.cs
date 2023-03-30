@@ -37,11 +37,12 @@ public class Bullet : MonoBehaviour
         // ÀÚÆø
         if(isSelfDes)
         {
-            Instantiate(bomb, transform.position, Quaternion.identity);
+            var temp = Instantiate(bomb, transform.position, Quaternion.identity);
+            temp.GetComponent<Bomb>().damage = damage * 2f;
             Destroy(gameObject);
         }
 
-        if(isForceMove)
+        if (isForceMove)
         {
             if(GameManager.GM.isGameStop)
             {
@@ -72,6 +73,12 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag(target))
         {
             collision.gameObject.GetComponent<Airship>()._HP = damage;
+            Destroy(gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Meteo") && target == "Enemy")
+        {
+            collision.gameObject.GetComponent<Meteo>()._HP = damage;
             Destroy(gameObject);
         }
 
