@@ -42,6 +42,18 @@ public class Spawn : MonoBehaviour
 
         if (spawnStart)
         {
+            // 利捞 金 醚舅 傈何 力芭
+            foreach(var i in FindObjectsOfType<Bullet>())
+            {
+                var BS = i.GetComponent<Bullet>();
+
+                if(BS.isTargetToPlayer)
+                {
+                    i.GetComponent<Bullet>().damage = 0;
+                    i.GetComponent<Bullet>().isSelfDes = true;
+                }
+            }
+
             if (WS[spawnIndex].isWindowPopup)
             {
                 StartCoroutine(WindowPopup());
@@ -72,6 +84,7 @@ public class Spawn : MonoBehaviour
         spawnCount = 100000;
         GameManager.GM.stageCount++;
 
+        yield return new WaitForSeconds(2f);
         Instantiate(WS[spawnIndex].objectType, new Vector3(0, 0, 0), Quaternion.identity);
         Debug.Log("sfagdsfhsh");
         yield return new WaitForSeconds(5f);

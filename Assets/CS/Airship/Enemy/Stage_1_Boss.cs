@@ -129,8 +129,10 @@ public class Stage_1_Boss : Enemy
         {
             foreach(var j in i.GetComponent<Pattern>().bulletList)
             {
+                j.damage = 0;
                 j.isSelfDes = true;
             }
+
             i.StopAllCoroutines();
         }
     }

@@ -18,9 +18,13 @@ public class Enemy : Airship
 
     GameObject hpCanvas;
     float tempHP;
+
+    bool isDie;
     protected override void Awake()
     {
         base.Awake();
+
+        isDie = false;
     }
 
     protected override void Start()
@@ -61,8 +65,22 @@ public class Enemy : Airship
     {
         base.hpDie();
 
-        GameManager.GM.destroyCount++;
+        if(!isDie)
+        {
+            StartCoroutine(DieCo());
+        }
+    }
+
+    IEnumerator DieCo()
+    {
+        isDie = true;
+
+        anim.SetTrigger("Hit");
+
+        GameManager.GM.destroyCount++; Debug.Log("Ãß°¡");
         GameManager.GM.score += destroyPoint;
+
+        yield return null;
     }
 
     [Serializable]

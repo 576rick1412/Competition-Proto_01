@@ -869,9 +869,69 @@ MonoBehaviour:
   WS:
   - isWindowPopup: 0
     isEnemyWave: 1
+    objectType: {fileID: 7659144453680497817, guid: f6934f0d784ca39429259b89d8a704d8, type: 3}
+    enemyLine: 1
+    pointLine: 0
+    endEnemyLine: 1
+    endPointLine: 1
+    times: 3
+    plusPos: 1
+    delay: 0.1
+  - isWindowPopup: 0
+    isEnemyWave: 1
+    objectType: {fileID: 7659144453680497817, guid: f6934f0d784ca39429259b89d8a704d8, type: 3}
+    enemyLine: 1
+    pointLine: 3
+    endEnemyLine: 1
+    endPointLine: 2
+    times: 3
+    plusPos: -1
+    delay: 0.1
+  - isWindowPopup: 0
+    isEnemyWave: 0
+    objectType: {fileID: 6215005682226894413, guid: 16b9fda64ee9c294e8254cdc5167d936, type: 3}
+    enemyLine: 0
+    pointLine: 0
+    endEnemyLine: 0
+    endPointLine: 0
+    times: 20
+    plusPos: 0
+    delay: 0.6
+  - isWindowPopup: 0
+    isEnemyWave: 1
+    objectType: {fileID: 7659144453680497817, guid: 1d5d096408c9d654a95dc52533790320, type: 3}
+    enemyLine: 0
+    pointLine: 1
+    endEnemyLine: 1
+    endPointLine: 1
+    times: 4
+    plusPos: 1
+    delay: 0
+  - isWindowPopup: 0
+    isEnemyWave: 1
+    objectType: {fileID: 7659144453680497817, guid: 1d5d096408c9d654a95dc52533790320, type: 3}
+    enemyLine: 0
+    pointLine: 1
+    endEnemyLine: 1
+    endPointLine: 2
+    times: 4
+    plusPos: -1
+    delay: 0
+  - isWindowPopup: 0
+    isEnemyWave: 1
     objectType: {fileID: 7355599214767949636, guid: b0fd7c9862a11974ba5311369fa3efd9, type: 3}
     enemyLine: 0
     pointLine: 1
+    endEnemyLine: 0
+    endPointLine: 0
+    times: 1
+    plusPos: 0
+    delay: 0
+  - isWindowPopup: 1
+    isEnemyWave: 0
+    objectType: {fileID: 5920473890329894932, guid: 6b3d17791f4c30a419cf616ace95b226, type: 3}
+    enemyLine: 0
+    pointLine: 0
     endEnemyLine: 0
     endPointLine: 0
     times: 1
