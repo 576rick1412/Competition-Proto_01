@@ -30,7 +30,6 @@ public class Player : Airship
     public float attackDelay;       // 공격 간격
     public int damage;              // 공격 데미지
     public int bulletSpeed;         // 총알 속도
-    public int bulletUpgrade;       // 총알 강화값
 
     [Header("이동 제한")]
     public float leftEnd;
@@ -88,6 +87,25 @@ public class Player : Airship
                 StartCoroutine(Fire());
             }
         }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (GameManager.GM.bombCount > 0)
+            {
+                // 적이 쏜 총알 전부 제거
+                foreach (var i in FindObjectsOfType<Bullet>())
+                {
+                    var BS = i.GetComponent<Bullet>();
+
+                    if (BS.isTargetToPlayer)
+                    {
+                        i.GetComponent<Bullet>().damage = 0;
+                        i.GetComponent<Bullet>().isSelfDes = true;
+                    }
+                }
+
+                GameManager.GM.bombCount--;
+            }
+        }    
     }
     
     void BorderCheck(ref Vector3 move)
@@ -120,18 +138,18 @@ public class Player : Airship
     {
         isAttack = false;
 
-        switch (bulletUpgrade)
+        switch (GameManager.GM.attackUpgradeCount)
         {
-            case 1:
+            case 0:
                 FireInstan();
                 break;
 
-            case 2:
+            case 1:
                 FireInstan(x:  0.1f);
                 FireInstan(x: -0.1f);
                 break;
 
-            case 3:
+            case 2:
                 FireInstan(x:  0.1f);
                 FireInstan(x: -0.1f);
 
@@ -139,7 +157,7 @@ public class Player : Airship
                 FireInstan(x: -0.1f, rot: -0.1f);
                 break;
 
-            case 4:
+            case 3:
                 FireInstan(x:  0.1f);
                 FireInstan(x: -0.1f);
                 FireInstan(x:  0.3f);

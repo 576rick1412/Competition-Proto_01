@@ -77,8 +77,10 @@ public class Enemy : Airship
 
         anim.SetTrigger("Hit");
 
-        GameManager.GM.destroyCount++; Debug.Log("Ãß°¡");
+        GameManager.GM.destroyCount++;
         GameManager.GM.score += destroyPoint;
+
+        GameManager.GM.ItemSpawn(transform.position);
 
         yield return null;
     }

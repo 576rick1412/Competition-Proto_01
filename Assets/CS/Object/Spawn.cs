@@ -101,6 +101,8 @@ public class Spawn : MonoBehaviour
         spawnCount = GameManager.GM.destroyCount + (uint)WS[spawnIndex].times;
         spawnStart = false;
 
+        yield return new WaitForSeconds(2f);
+
         float tempPos = 0f;
         for (int i = 0; i < WS[spawnIndex].times; i++)
         {
@@ -124,6 +126,8 @@ public class Spawn : MonoBehaviour
         spawnStart = false;
         uint tempCount = spawnCount;
         spawnCount = 100000;
+
+        yield return new WaitForSeconds(2f);
 
         float ranPosX = 3.5f;
         for (int i = 0; i < WS[spawnIndex].times; i++)

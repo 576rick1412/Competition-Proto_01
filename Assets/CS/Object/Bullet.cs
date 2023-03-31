@@ -14,11 +14,13 @@ public class Bullet : MonoBehaviour
 
     [Header("ÀÚÆø")]
     public bool isSelfDes;          // ÃÑ¾Ë ÀÚÆø
+    public bool isOneDes;           // ÃÑ¾Ë ÀÚÆø ÇÑ¹ø¸¸ ÇÏµµ·Ï
     public GameObject bomb;         // ÆÄ±« ¹öºí
 
     void Awake()
     {
         isSelfDes = false;
+        isOneDes = true;
     }
     void Start()
     {
@@ -35,11 +37,11 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         // ÀÚÆø
-        if(isSelfDes)
+        if(isSelfDes && isOneDes)
         {
-            var temp = Instantiate(bomb, transform.position, Quaternion.identity);
-            temp.GetComponent<Bomb>().damage = damage * 2f;
-            Destroy(gameObject);
+            isOneDes = false;
+
+            Invoke("InstanDes", Random.Range(0f, 0.5f));
         }
 
         if (isForceMove)
@@ -58,6 +60,13 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    void InstanDes()
+    {
+        var temp = Instantiate(bomb, transform.position, Quaternion.identity);
+        temp.GetComponent<Bomb>().damage = damage * 2f;
+        Destroy(gameObject);
+    }
+
     public void BulletSetting(bool target = true, bool isForce = false, float spd = 0, int dmg = 0)
     {
         isTargetToPlayer = target;
@@ -72,6 +81,11 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.CompareTag(target))
         {
+            if(target == "Player" && GameManager.GM.isIfinity)
+            {
+                return;
+            }
+
             collision.gameObject.GetComponent<Airship>()._HP = damage;
             Destroy(gameObject);
         }

@@ -15,6 +15,12 @@ public class MainUI : MonoBehaviour
     [Header("Á¡¼ö")]
     public TextMeshProUGUI scoreTMP;
 
+    [Header("ÆøÅº °³¼ö")]
+    public TextMeshProUGUI bombTMP;
+
+    [Header("°ø°Ý ·¹º§")]
+    public TextMeshProUGUI atkTMP;
+
     Player player;
     void Start()
     {
@@ -36,5 +42,11 @@ public class MainUI : MonoBehaviour
 
         // Á¡¼ö
         scoreTMP.text = GameManager.GM.CommaText(GameManager.GM.score);
+
+        // ÆøÅº °³¼ö
+        bombTMP.text = GameManager.GM.CommaText(GameManager.GM.bombCount);
+
+        // °ø°Ý ·¹º§
+        atkTMP.text = GameManager.GM.CommaText((uint)GameManager.GM.attackUpgradeCount + 1);
     }
 }

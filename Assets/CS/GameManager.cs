@@ -9,12 +9,24 @@ public class GameManager : MonoBehaviour
     public static GameManager GM;
 
     [Header("게임 설정")]
-    public bool isGameStop;     // 게임의 모든 오브젝트 정지 
-    public uint score;          // 게임 점수
-    public float runTime;       // 게임 진행 시간
-    public uint stageCount;     // 현재 스테이지 번호
-    public uint destroyCount;   // 적 파괴 개수
+    public bool isGameStop;         // 게임의 모든 오브젝트 정지 
+    public uint score;              // 게임 점수
+    public float runTime;           // 게임 진행 시간
+    public uint stageCount;         // 현재 스테이지 번호
+    public uint destroyCount;       // 적 파괴 개수
 
+    [Header("아이템 설정")]
+    public GameObject[] items;      // 아이템 목록
+    public int attackUpgradeCount;  // 현재 공격 강화상태
+    public IEnumerator infinityCo;  // 무적 코루틴
+    public bool isIfinity;          // 무적 체크
+    public float infinityTime;      // 무적 시간
+    public int plusHPValue;         // 체력회복량
+    public int plusOilValue;        // 연료 회복량
+    public uint bombCount;          // 폭탄 보유 개수
+    public uint plueSrore;          // 획득 시 주는 점수
+
+    // 저장 관련
     string filePath;
     public MainDB data;
 
@@ -55,6 +67,11 @@ public class GameManager : MonoBehaviour
         runTime = 0f;
         stageCount = 0;
         destroyCount = 0;
+
+        attackUpgradeCount = 0;
+        infinityCo = Infinity();
+        isIfinity = false;
+        bombCount = 0;
     }
 
     public string CommaText(uint value)
@@ -87,6 +104,28 @@ public class GameManager : MonoBehaviour
             }
         }
         JsonSave();
+    }
+
+    public void ItemSpawn(Vector3 pos)
+    {
+        int x = Random.Range(0, items.Length);
+        Instantiate(items[x], pos, Quaternion.identity);
+    }
+
+    public void InfinityPlayer()
+    {
+        StartCoroutine(infinityCo);
+        infinityCo = Infinity();
+        StartCoroutine(infinityCo);
+    }
+
+    public IEnumerator Infinity()
+    {
+        isIfinity = true;
+        yield return new WaitForSeconds(infinityTime);
+
+        isIfinity = false;
+        yield return null;
     }
 
     public void JsonSave()
