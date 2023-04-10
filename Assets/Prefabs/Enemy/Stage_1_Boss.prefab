@@ -309,12 +309,12 @@ MonoBehaviour:
   delay: 6
   endPos: {x: 0, y: 0, z: 0}
   formShot:
-    times: 4
+    times: 3
     count: 6
     bulletType: 0
     speed: 2
     damage: 30
-    angle: 60
+    angle: 70
   multiShot360:
     times: 8
     count: 16
@@ -342,7 +342,7 @@ MonoBehaviour:
     count: 16
     bulletType: 0
     delay: 0.3
-    speed: 1.5
+    speed: 1
     damage: 30
     rotDir: 1
   bossHPBar: {fileID: 7355599214347801134}

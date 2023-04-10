@@ -48,6 +48,20 @@ public class TitleUI : MonoBehaviour
         rnakUI.SetActive(isRankPopup);
     }
 
+    public void RankPopupClose()
+    {
+        isRankPopup = !isRankPopup;
+
+        rnakUI.GetComponent<Animator>().SetTrigger("popup");
+
+        Invoke("LateClose", 1f);
+    }
+
+    void LateClose()
+    {
+        rnakUI.SetActive(isRankPopup);
+    }
+
     [System.Serializable]
     public struct RankUI
     {

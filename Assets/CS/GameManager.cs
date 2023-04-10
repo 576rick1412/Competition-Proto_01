@@ -23,8 +23,17 @@ public class GameManager : MonoBehaviour
     public float infinityTime;      // ¹«Àû ½Ã°£
     public int plusHPValue;         // Ã¼·ÂÈ¸º¹·®
     public int plusOilValue;        // ¿¬·á È¸º¹·®
-    public uint bombCount;          // ÆøÅº º¸À¯ °³¼ö
     public uint plueSrore;          // È¹µæ ½Ã ÁÖ´Â Á¡¼ö
+
+    [Header("½ºÅ³ ¼³Á¤")]
+    public int bombCount;           // ÆøÅº °³¼ö
+    public float setBombCoolTime;   // ÆøÅº ÄðÅ¸ÀÓ ÀúÀå
+    public float bombCoolTime;      // ÇöÀç ÆøÅº ÄðÅ¸ÀÓ
+
+    public int healCount;           // Èú °³¼ö
+    public int healValue;           // Èú °è¼ö
+    public float setHealCoolTime;   // Èú ÄðÅ¸ÀÓ ÀúÀå
+    public float healCoolTime;      // ÇöÀç Èú ÄðÅ¸ÀÓ
 
     // ÀúÀå °ü·Ã
     string filePath;
@@ -57,7 +66,61 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+        // ÆøÅº ½ºÅ³ °ü¸®
+        if (bombCoolTime >= setBombCoolTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (bombCount > 0)
+                {
+                    bombCoolTime = 0;
+
+                    // ÀûÀÌ ½ð ÃÑ¾Ë ÀüºÎ Á¦°Å
+                    foreach (var i in FindObjectsOfType<Bullet>())
+                    {
+                        var BS = i.GetComponent<Bullet>();
+
+                        if (BS.isTargetToPlayer)
+                        {
+                            i.GetComponent<Bullet>().damage = 0;
+                            i.GetComponent<Bullet>().isSelfDes = true;
+                        }
+                    }
+
+                    bombCount--;
+                }
+            }
+        }
+        else
+        {
+            bombCoolTime += Time.deltaTime;
+        }
+
+        // Èú ½ºÅ³ °ü¸®
+        if (healCoolTime >= setHealCoolTime)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (healCount > 0)
+                {
+                    healCoolTime = 0;
+
+                    var player = GameObject.Find("Player").GetComponent<Player>();
+                    player.HP += healValue;
+
+                    if(player.HP > player.setHP)
+                    {
+                        player.HP = player.setHP;
+                    }
+
+                    healCount--;
+                }
+            }
+        }
+        else
+        {
+            healCoolTime += Time.deltaTime;
+        }
     }
 
     public void GameDataReset()
@@ -71,7 +134,13 @@ public class GameManager : MonoBehaviour
         attackUpgradeCount = 0;
         infinityCo = Infinity();
         isIfinity = false;
-        bombCount = 0;
+
+        bombCount = 2;
+        healCount = 2;
+
+        // ½ÃÀÛ ½Ã 20ÃÊ¸¦ ±â´Ù·Á¾ß ½ºÅ³ »ç¿ë °¡´É
+        healCoolTime = setHealCoolTime - 20;
+        bombCoolTime = setBombCoolTime - 20;
     }
 
     public string CommaText(uint value)

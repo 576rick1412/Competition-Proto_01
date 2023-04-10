@@ -36,6 +36,7 @@ public class Player : Airship
     public float rightEnd;
     public float topEnd;
     public float bottomEnd;
+    float setSpeed;
 
     [Header("게임오버 UI")]
     public GameObject gameOverUI;
@@ -51,6 +52,8 @@ public class Player : Airship
         oil = setOil;
 
         isAttack = true;
+
+        setSpeed = speed;
     }
 
     protected override void Start()
@@ -78,6 +81,15 @@ public class Player : Airship
             return;
         }
 
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            setSpeed = speed * 2;
+        }   // 가속
+        else
+        {
+            setSpeed = speed;
+        }
+
         InputMove();
 
         if(Input.GetKey(KeyCode.Space))
@@ -87,37 +99,18 @@ public class Player : Airship
                 StartCoroutine(Fire());
             }
         }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (GameManager.GM.bombCount > 0)
-            {
-                // 적이 쏜 총알 전부 제거
-                foreach (var i in FindObjectsOfType<Bullet>())
-                {
-                    var BS = i.GetComponent<Bullet>();
-
-                    if (BS.isTargetToPlayer)
-                    {
-                        i.GetComponent<Bullet>().damage = 0;
-                        i.GetComponent<Bullet>().isSelfDes = true;
-                    }
-                }
-
-                GameManager.GM.bombCount--;
-            }
-        }    
     }
     
     void BorderCheck(ref Vector3 move)
     {
-        if (transform.position.x + (move.x * speed * Time.deltaTime) <= leftEnd ||
-            transform.position.x + (move.x * speed * Time.deltaTime) >= rightEnd)
+        if (transform.position.x + (move.x * setSpeed * Time.deltaTime) <= leftEnd ||
+            transform.position.x + (move.x * setSpeed * Time.deltaTime) >= rightEnd)
         {
             move.x = 0f;
         }
 
-        if (transform.position.y + (move.y * speed * Time.deltaTime) >= topEnd ||
-            transform.position.y + (move.y * speed * Time.deltaTime) <= bottomEnd)
+        if (transform.position.y + (move.y * setSpeed * Time.deltaTime) >= topEnd ||
+            transform.position.y + (move.y * setSpeed * Time.deltaTime) <= bottomEnd)
         {
             move.y = 0f;
         }
@@ -130,7 +123,7 @@ public class Player : Airship
         move.y = Input.GetAxisRaw("Vertical");
 
         BorderCheck(ref move);
-        Move(move, speed);
+        Move(move, setSpeed);
 
         anim.SetInteger("move", (int)move.x);
     }

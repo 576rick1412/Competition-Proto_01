@@ -114,6 +114,12 @@ public class Pattern : MonoBehaviour
     {
         StartCoroutine(TargetRound(times, count, bulletType, delay, speed, damage, rad));
     }
+
+    public void Start_Round(int count, int bulletType, float delay, float speed, int damage, float rad)
+    {
+        StartCoroutine(Round(count, bulletType, delay, speed, damage, rad));
+    }
+    
     public void Start_StopTargetRound(             int count, int bulletType, float delay, float speed, int damage, float rad)
     {
         StartCoroutine(StopTargetRound(count, bulletType, delay, speed, damage, rad));
@@ -360,7 +366,7 @@ public class Pattern : MonoBehaviour
             }
 
             rotDir *= -1;
-            plus += delay * 3;
+            //plus += delay * 3;
         }
 
         yield return new WaitForSeconds(desTime);
@@ -390,6 +396,37 @@ public class Pattern : MonoBehaviour
 
             yield return new WaitForSeconds(delay);
         }
+
+        yield return new WaitForSeconds(desTime);
+
+        foreach (var i in bulletList)
+        {
+            i.isSelfDes = true;
+        }
+
+        Destroy(gameObject);
+        yield return null;
+    }
+
+    IEnumerator Round(int count, int bulletType, float delay, float speed, int damage, float rad)
+    {
+        Transform player = GameObject.Find("Player").transform;
+
+        for (int j = 0; j < 360; j += 360 / count)
+        {
+            Vector3 pos = transform.position +
+                new Vector3(Mathf.Cos(j * Mathf.Deg2Rad) * rad, Mathf.Sin(j * Mathf.Deg2Rad) * rad, 0);
+
+            Vector2 dir = (player.position - transform.position).normalized;
+            float z = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            var bullet = Instantiate(bullets[bulletType], pos, Quaternion.Euler(0, 0, z - 90));
+            bullet.GetComponent<Bullet>().BulletSetting(spd: speed, dmg: damage);
+
+            bulletList.Add(bullet.GetComponent<Bullet>());
+        }
+
+        yield return new WaitForSeconds(delay);
 
         yield return new WaitForSeconds(desTime);
 
